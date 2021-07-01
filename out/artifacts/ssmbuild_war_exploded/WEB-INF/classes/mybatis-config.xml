@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--配置数据源,整合后交给spring去做-->
+
+    <!--加入mybatis的标准日志-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--别名-->
+    <typeAliases>
+        <package name="com.msj.pojo"/>
+    </typeAliases>
+
+    <!--绑定Mapper.xml配置文件-->
+    <mappers>
+        <mapper class="com.msj.dao.BookMapper"/>
+    </mappers>
+</configuration>

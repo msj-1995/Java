@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--1.扫描service下的包:开启注解支持（只要service包下的类有注解就会被扫描到-->
+    <context:component-scan base-package="com.msj.service"/>
+
+    <!--2.将我们的所有业务类注入到spring，可以通过配置，或者注解实现-->
+    <!--这里通过配置-->
+    <bean id="bookServiceImpl" class="com.msj.service.BookServiceImpl">
+        <!--需要注入一个BookMapper类，而这个类在spring-dao.xml中已经通过自动扫描方式注入了，
+        所以这了可以直接引用
+        注意:这类要能成功引用到bookMapper这个对象，需要spring-dao.xml和spring-service.xml关联，关联的方式有两种：
+        方式一：通过idea关联
+        方式二：通过在spring-service.xml中导入spring-dao.xml,使用import resource="classpath:需要关联的.xml文件"即可关联
+        还有一种方式：在applicationContext.xml中导入所有的spring-xxx.xml文件，这样所有的spring配置文件都关联到一起了
+        注意下面的配置也可以通过注解实现：@Service 在类上注解
+        @Autowired在属性或是set方法上注解即可实现自动装配
+        -->
+        <property name="bookMapper" ref="bookMapper"/>
+    </bean>
+
+    <!--3.声明式事务配置：自动提交和回滚（在service层配置）-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--4.如果需要AOP切入功能，需要配置aop事务支持-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="txPointCut" expression="execution(* com.msj.dao.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+</beans>
