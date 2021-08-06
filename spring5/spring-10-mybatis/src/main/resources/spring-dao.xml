@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--数据源：DataSource 使用spring的数据源替换mybatis的配置
+    数据源：c3p0 dbcp druid等
+    这里使用spring的jdbc:org.springframework.jdbc.datasource
+    下面的配置完成后，就是由spring来接管数据源了
+    -->
+    <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?serverTimezone=CST&amp;useSSL=true&amp;useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="1234"/>
+    </bean>
+
+    <!--配置：sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+
+        <!--绑定mybatis配置文件：此时mybatis的核心配置文件中什么都可以不用留下（一般可以将别名和设置留在
+        mybatis的核心配置文件中-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--绑定......Mapper.xml文件，也可以直接使用*.xml匹配所有的xml文件-->
+        <property name="mapperLocations" value="com/msj/mapper/UserMapper.xml"/>
+    </bean>
+
+    <!--配置sqlSession-->
+   <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <!-->这里只能使用构造器注入sqlSessionFactory,因为没有set方法-->
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!--注册UserMapperImpl实现类-->
+    <bean id="userMapperImpl" class="com.msj.mapper.UserMapperImpl">
+        <!--注入SqlSessionTemplate-->
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+
+    <!--注册UserMapperImpl2实现类-->
+    <bean id="userMapperImpl2" class="com.msj.mapper.UserMapperImpl2">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>
