@@ -1,0 +1,30 @@
+server:
+  port: 8002
+mybatis:
+  type-aliases-package: com.msj.springcloud.api.pojo
+  config-location: classpath:mybatis/mybatis-config.xml   # mybatis的核心配置文件
+  mapper-locations: classpath:mybatis/mapper/*.xml   # mybatis的mapper文件位置
+
+# spring的配置
+spring:
+  application:
+    name: springcloud-provider-dept # 为该模块（微服务）起一个名字
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3307/springclouddb02?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 1234
+
+# Eureka的配置：服务注册到哪里
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/ # 把服务注册到我们刚才配置的注册中心：localhost:7001/eureka
+  instance:
+    instance-id: springcloud-provider-dept8002 # 修改Eureka上的默认描述信息
+
+# 完善监控信息配置
+info:
+  app.name: msj-springcloud  # 项目名字（当然没什么作用，不配也可以）
+  company.name: msj  # 公司名字
