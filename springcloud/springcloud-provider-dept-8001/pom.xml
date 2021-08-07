@@ -17,6 +17,17 @@
     </properties>
 
     <dependencies>
+        <!-- actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- Eureka依赖：完善监控信息 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <version>1.4.6.RELEASE</version>
+        </dependency>
         <!--我们需要实体类：所以我们需要springcloud-api模块-->
         <dependency>
             <groupId>com.msj</groupId>
