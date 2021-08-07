@@ -4,9 +4,10 @@ server:
 # Eureka的配置
 eureka:
   instance:
-    hostname: localhost  # Eureka服务端的实列名称
+    hostname: eureka7001.com  # Eureka服务端的实列名称:eureka7001本质上还是localhost(127.0.0.1)
   client:
     register-with-eureka: false  # 表示是否向eureka注册中心注册自己（服务器不用注册自己）
     fetch-registry: false  # 如果fetch-registry为false,表示自己为注册中心
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka  # 这就是监控页面地址：hostname和port(端口）都是从配置文件中动态获取的
+      # 集群：关联其他的注册中心
+      defaultZone: http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka # 关联7002和7003注册中心
