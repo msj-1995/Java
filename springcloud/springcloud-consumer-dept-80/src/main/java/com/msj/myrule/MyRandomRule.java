@@ -15,6 +15,8 @@ public class MyRandomRule extends AbstractLoadBalancerRule {
     // index=0,默认0,如果total=5,index++,如果index>=0,index置零
 
     private int total = 0; // 被调用的次数
+    private int currentIndex = 0;  // 当前谁在提供服务
+
 
     public MyRandomRule() {
     }
@@ -38,10 +40,26 @@ public class MyRandomRule extends AbstractLoadBalancerRule {
                 }
 
                 // 生成区间随机数
-                int index = this.chooseRandomInt(serverCount);
+                // int index = this.chooseRandomInt(serverCount);
                 // 从活着的服务中，随机获取一个服务
-                server = (Server)upList.get(index);
+                // server = (Server)upList.get(index);
                 // 如果没有服务，线程礼让后继续
+
+                // -==========自定义代码===============
+                if(total < 5) {
+                    server = upList.get(currentIndex);
+                    total++;
+                }else {
+                    total = 0;
+                    currentIndex++;
+                    if(currentIndex >= upList.size()) {
+                        currentIndex = 0;
+                    }
+                    // 从活着的服务中获取指定的服务来操作
+                    server = upList.get(currentIndex);
+                }
+                // -============算法结束===============
+
                 if (server == null) {
                     Thread.yield();
                 } else {
