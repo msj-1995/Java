@@ -1,0 +1,11 @@
+server:
+  port: 3344
+spring:
+  application:
+    name: springcloud-config-server
+  # 连接远程仓库
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/mshunj/springcloud-config.git  # 地址使用码云仓库中的克隆下的https网址
