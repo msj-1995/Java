@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @Component
-@FeignClient(value = "springcloud-provider-dept")
+@FeignClient(value = "springcloud-provider-dept", fallbackFactory = DeptClientServiceFallbackFactory.class)
 public interface DeptClientService {
     @GetMapping("/dept/get/{id}")
     public Dept queryById(@PathVariable("id") Long id);
