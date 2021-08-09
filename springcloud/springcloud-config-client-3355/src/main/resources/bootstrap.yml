@@ -1,0 +1,8 @@
+# 系统级别的配置：spring
+spring:
+  cloud:
+    config:
+      name: config-client # 需要从git上读取的资源名称，不需要后缀，这里读取git上的config-client.yml
+      profile: dev # 需要那那个配置环境
+      label: master # 读取文件的分支
+      uri: http://localhost:3344  # 连接服务端
