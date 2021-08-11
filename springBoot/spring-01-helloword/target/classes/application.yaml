@@ -1,0 +1,17 @@
+server:
+  port: 8084
+#可以在yaml中使用ESTL表达式
+person:
+  name: msj${random.uuid}  #msj连接上一个uuid
+  age: ${random.int}  #使用一个随机数
+  happy: false
+  hello: hell呀
+  birth: 2019/11/02
+  maps: {k1: v1,k2: v2}
+  lists:
+    - code
+    - music
+    - girl
+  dog:
+    name: ${person.hello:hello}_旺财 #占位符' : '符号：如果person有值就输出person.hello的值，否则输出：后的值hello
+    age: 3
