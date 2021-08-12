@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--取变量值:所有的html元素都可以被thymeleaf替换接管： th:html元素名
+如果被thymeleaf接管了，就可以使用thymeleaf的表达式了
+th:text 不转义，直接解析文文本
+th:utext 转义，可以转义为html文档-->
+<div th:text="${msg}"></div>
+<div th:utext="${msg}"></div>
+
+<hr>
+
+<!--遍历集合-->
+<h3 th:each="user:${users}" th:text="${user}"></h3>
+
+<hr>
+
+<!--第二种写法-->
+<h3 th:each="user:${users}">[[${user}]]</h3>
+</body>
+</html>
