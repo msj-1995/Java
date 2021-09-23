@@ -1,0 +1,65 @@
+server:
+  port: 8085
+spring:
+  main:
+    # 配置报错可以覆盖，不报错可以不用配置
+    allow-bean-definition-overriding: true
+    # 配置参数，显示sql
+  shardingsphere:
+    props:
+      sql:
+        show: true
+    # 配置数据源
+    datasource:
+      # 给每个数据源起别名，下面的ds1,ds2,ds3任意取名字（一主两从，ds1主，ds2和ds3从）
+      names: ds1,ds2,ds3
+      # 给master-ds1每个数据源配置数据库连接信息
+      ds1:
+        # 配置的druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        # 可设置serverTimezone=GMT%2b8,%2b为+号
+        url: jdbc:mysql://localhost:3307/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+        username: root
+        password: 1234
+        maxPoolSize: 100
+        minPoolSize: 5
+
+      # 配置ds2-slave
+      ds2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://114.55.59.10:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+        username: root
+        password: 1234
+        maxPoolSize: 100
+        minPoolSize: 5
+      # 配置ds3-slave
+      ds3:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://114.55.59.10:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+        username: root
+        password: 1234
+        maxPoolSize: 100
+        minPoolSize: 5
+    # 配置默认数据源
+    sharding:
+      # 默认数据源，主要用于写，注意一定要配置读写分离，注意：如果不配置，那么会把三个节点都当作slave节点,新增、修改和删除就会报错。
+      # 配置了默认主节点为ds1,则masterslave可以不用配置，配置的原因是覆盖里面的规则，因为默认负载均衡是随机的挑选数据源，我们改为了轮询机制
+      default-data-source-name: ds1
+    # 配置数据源的读写分离，数据库一定要做主从复制
+    masterslave:
+      # 配置主从名称，名字可以任意取
+      name: ms
+      # 配置主库master，负责写入数据
+      master-data-source-name: ds1
+      # 配置slave节点
+      slave-data-source-names: ds2,ds3
+      # 配置slave节点的负载均衡策略，采用轮询机制
+      load-balance-algorithm-type: round_robin
+
+# 整合mybatis的配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.msj.entity
