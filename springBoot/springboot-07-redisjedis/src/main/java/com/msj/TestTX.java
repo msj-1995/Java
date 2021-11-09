@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
+# jedis事务测试
 public class TestTX {
     public static void main(String[] args) {
         Jedis jedis = new Jedis("127.0.0.1", 6379);
